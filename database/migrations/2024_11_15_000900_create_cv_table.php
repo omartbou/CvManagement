@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('city_id');
             $table->unsignedBigInteger('job_id');
             $table->unsignedBigInteger('language_id');
+            $table->string('email');
             $table->date('due_date');
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
