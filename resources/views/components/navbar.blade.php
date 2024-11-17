@@ -10,7 +10,7 @@
         </div>
         <div style="margin-right:67%">
             <button class="btn btn-light" id="toggleSidebarButton">
-                <i class="bi bi-list"></i> <!-- Hamburger icon to toggle sidebar -->
+                <i class="bi bi-code"></i> <!-- Hamburger icon to toggle sidebar -->
             </button>
         </div>
         <div class="d-flex justify-content-end">

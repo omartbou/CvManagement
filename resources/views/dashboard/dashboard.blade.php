@@ -169,15 +169,7 @@
             </table>
         </div>
 
-        <!-- Pagination -->
-        <nav aria-label="Page navigation example" class="d-flex justify-content-end mt-3">
-            <ul class="pagination" id="pagination">
-                <!-- Example Pagination Items -->
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-            </ul>
-        </nav>
+
     </div>
 
     <!-- Modal for Adding CV -->
@@ -246,7 +238,7 @@
         $(document).ready(function () {
             var table = $('#example').DataTable({
                 dom: '<"top"i>rt<"bottom"p>',
-                paging: false,
+                paging: true,
                 info: false,
                 searching: true,
                 lengthChange: false
