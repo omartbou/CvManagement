@@ -48,8 +48,14 @@ class DashboardController extends Controller
         ]);
         $filePath = $this->cvService->handleFileUpload($request);
         $cvData = array_merge($validated, ['FilePath' => $filePath]);
-        $this->cvRepository->store($cvData);
-        return redirect()->back()->with('success', 'CV uploaded successfully!');
+        if($cvData){
+            $this->cvRepository->store($cvData);
+
+        }
+        return response()->json([
+            'success' => true,
+            'message' => 'CV uploaded successfully!',
+        ]);
     }
 
 }

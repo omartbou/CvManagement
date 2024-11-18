@@ -120,7 +120,6 @@
         color: #232F68 !important;
         background-color: #97bdf5 !important;
         border-radius: 5px;
-
     }
     .table-active {
         color: #232F68 !important;
@@ -177,7 +176,10 @@
                     <input type="text" id="filter-email" class="form-control" placeholder="Email">
                 </div>
             </div>
+
         </div>
+        <div id="success-message"></div>
+
         <!-- Data Table -->
         <div class="table-container">
             @include('components.table_cv')
@@ -270,7 +272,78 @@
                dropZone.innerHTML = `<i class="bi bi-file-earmark-arrow-up"></i><p>${file.name}</p>`;
            }
        });
+       $('#createCvModal').on('hidden.bs.modal', function () {
+           // Manually remove any existing modal backdrop
+           $('.modal-backdrop').remove();
+           // Reset any modal body content or other changes if needed
+           $(this).find('.modal-body').html('');
+       });
 
+       const observer = new MutationObserver((mutations) => {
+           mutations.forEach((mutation) => {
+               if (mutation.type === 'childList') {
+                   if (!$('#createCvModal').hasClass('show')) {
+                       $('.modal-backdrop').remove();
+                   }
+               }
+           });
+       });
+
+       observer.observe(document.body, {
+           childList: true,
+           subtree: true
+       });
+
+       $(document).ready(function() {
+           $('#cvForm').on('submit', function(event) {
+               event.preventDefault(); // Prevent the default form submission
+
+               // Clear previous error messages
+               $('#cv-error').html('');
+               $('#ville-error').html('');
+               $('#metier-error').html('');
+               $('#email-error').html('');
+               $('#langue-error').html('');
+
+               // Send the form data using AJAX
+               $.ajax({
+                   url: $(this).attr('action'),
+                   method: 'POST',
+                   data: new FormData(this),
+                   processData: false,
+                   contentType: false,
+                   success: function(response) {
+                       if (response.success) {
+                           // Show success message in the index (in the success-message div or elsewhere)
+                           $('#success-message').html('<div class="alert alert-success">' + response.message + '</div>');
+                       }
+                       $('#createCvModal').modal('hide');
+
+                       // Optionally reset the form
+                       $('#cvForm')[0].reset();
+                   },
+                   error: function(xhr) {
+                       // Show error messages for each field
+                       var errors = xhr.responseJSON.errors;
+                       if(errors.cv) {
+                           $('#cv-error').html('<div class="text-danger">' + errors.cv[0] + '</div>');
+                       }
+                       if(errors.ville) {
+                           $('#ville-error').html('<div class="text-danger">' + errors.ville[0] + '</div>');
+                       }
+                       if(errors.metier) {
+                           $('#metier-error').html('<div class="text-danger">' + errors.metier[0] + '</div>');
+                       }
+                       if(errors.email) {
+                           $('#email-error').html('<div class="text-danger">' + errors.email[0] + '</div>');
+                       }
+                       if(errors.langue) {
+                           $('#langue-error').html('<div class="text-danger">' + errors.langue[0] + '</div>');
+                       }
+                   }
+               });
+           });
+       });
 
     </script>
 @endsection
