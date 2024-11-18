@@ -29,11 +29,13 @@ class DashboardController extends Controller
         $jobs      = $this->jobRepository->get();
         $cities    = $this->cityRepository->get();
         $cvs       = $this->cvRepository->get();
+        $user      = Auth::user();
         return view('dashboard.dashboard',[
             'cities'=>$cities,
             'languages'=>$languages,
             'jobs'=>$jobs,
             'cvs' => $cvs,
+            'user' => $user,
         ]);
     }
 
@@ -46,7 +48,7 @@ class DashboardController extends Controller
         ]);
         $filePath = $this->cvService->handleFileUpload($request);
         $cvData = array_merge($validated, ['FilePath' => $filePath]);
-        $cv = $this->cvRepository->store($cvData);
+        $this->cvRepository->store($cvData);
         return redirect()->back()->with('success', 'CV uploaded successfully!');
     }
 

@@ -16,8 +16,20 @@
         flex-direction: column;
         justify-content: flex-start;
         transition: all 0.3s ease;
+        padding-left: 10px;
+
     }
 
+    .toggle-navbar {
+        position: absolute;
+        top: 10px;
+        left: 215px;
+        border: none;
+        padding: 10px;
+        cursor: pointer;
+        z-index: 20;
+
+    }
     /* Sidebar closed */
     .sidebar-closed {
         width: 0;
@@ -48,6 +60,7 @@
     .btn-filter {
         background-color: #232F68 !important;
         color: white !important;
+
     }
     .btn-clear{
         color:#232F68 !important;
@@ -76,7 +89,42 @@
         max-height: 300px !important;
         overflow-y: auto !important;
     }
+    .page-item {
+        margin-right: 5px;
+    }
 
+    .page-item.active .page-link {
+        color: white !important;
+        background-color: #232F68 !important;
+        border-color: #232F68 !important;
+    }
+
+    .page-link {
+        color: #232F68 !important;
+    }
+
+    .page-link:hover {
+        background-color: #232F68 !important;
+        color: white !important;
+    }
+
+    .page-item .next-button {
+        border: 2px solid #232F68; /* Border for the Next button */
+        border-radius: 5px; /* Optional: adds rounded corners */
+    }
+
+    .page-item .page-link {
+        cursor: pointer;
+    }
+    .nav-link.active {
+        color: #232F68 !important;
+        background-color: #97bdf5 !important;
+        border-radius: 5px;
+
+    }
+    .table-active {
+        color: #232F68 !important;
+    }
 </style>
 
 @extends('layout.app')
@@ -85,29 +133,29 @@
 @section('content')
 
     <x-sidebar></x-sidebar>
-    <x-navbar></x-navbar>
-
+    @include('components.navbar')
     <!-- Main Content -->
     <div class="content" id="content">
         <!-- Buttons and Filters -->
         <div class="d-flex justify-content-between align-items-center border-bottom mb-4 pb-2" style="width: 100%;">
             <div class="d-flex align-items-center">
-                <h4 class="mb-0 me-3">Task</h4>
-                <a class="nav-link me-2" href="#">
+                <h5 class="me-5" style="color:#232F68 !important;">Task</h5>
+                <a class="nav-link me-4 text-secondary" href="#" id="list-link">
                     <i class="bi bi-list-task"></i> List
                 </a>
-                <a class="nav-link" href="#">
-                    <i class="bi bi-table"></i> Table
+                <a class="nav-link table-active " href="#" id="table-link">
+                    <i class="bi bi-table" ></i> Table
                 </a>
             </div>
             <div class="d-flex align-items-center">
                 <button class="btn btn-clear me-2">
                     <i class="bi bi-x"></i> Clear
                 </button>
-                <button class="btn btn-filter me-2">
+                <button class="btn btn-filter me-3">
                     <i class="bi bi-funnel"></i> Filter
                 </button>
-                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#createCvModal">
+                <div class="border-end me-3" style="height: 40px;"></div>
+                <button class="btn btn-danger border-left" data-bs-toggle="modal" data-bs-target="#createCvModal">
                     <i class="bi bi-plus"></i> Ajouter un CV
                 </button>
             </div>
@@ -132,104 +180,17 @@
         </div>
         <!-- Data Table -->
         <div class="table-container">
-            <table id="example" class="table table-bordered">
-                <thead class="table-light">
-                <tr>
-                    <th>CV</th>
-                    <th>Due Date</th>
-                    <th>Ville</th>
-                    <th>Métier</th>
-                    <th>Email</th>
-                    <th>Ajouté par</th>
-                    <th>Langue</th>
-                    <th>Contact</th>
-                    <th>Action</th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach($cvs as $cv)
-                    <tr>
-                        <td><a href="#">{{$cv->user->name}}</a></td>
-                        <td>{{ now()->format('d M Y') }}</td>
-                        <td>{{$cv->city->name}}</td>
-                        <td  class="text-center"><span class="badge-metier">{{$cv->job->name}}</span></td>
-                        <td   ><i class="bi bi-envelope"></i> {{$cv->user->email}}</td>
-                        <td  class="text-center">{{$cv->user->name}}</td>
-                        <td  class="text-center">{{$cv->language->code}}</td>
-                        <td  class="text-center">
-                            <div class="toggle-switch">
-                                <input type="checkbox" checked>
-                                <i  class="bi bi-info-circle"></i>
-                            </div>
-                        </td>
-                        <td  class="text-center"><i class="bi bi-trash"></i></td>
-                    </tr>
-                @endforeach
-                </tbody>
-            </table>
+            @include('components.table_cv')
         </div>
+        <div class="d-flex justify-content-end">
 
+            {{ $cvs->links('vendor.pagination.default') }}
 
-    </div>
+        </div>
 
     <!-- Modal for Adding CV -->
     <div class="modal fade" id="createCvModal" tabindex="-1" aria-labelledby="createCvModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <form id="cvForm" action="{{ route('cv.store') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="createCvModalLabel">Ajouter un CV</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="cv" class="form-label">Uploader le CV <span class="text-danger">*</span></label>
-                            <div class="drop-zone" id="drop-zone">
-                                <i class="bi bi-file-earmark-arrow-up"></i>
-                                <p>Drag files here or Browse</p>
-                            </div>
-                            <input type="file" name="cv" class="form-control d-none" id="cv" required>
-                            <div class="d-flex justify-content-between">
-                                <small class="form-text text-muted">Formats supported: PDF, Doc, Docx.</small>
-                                <small class="form-text text-muted">Max file size: 20MB.</small>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="ville" class="form-label">Ville</label>
-                            <select name="ville" id="ville" class="form-control" data-live-search="true">
-                                @foreach($cities as $city)
-                                    <option value="{{$city->id}}">{{$city->name}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="metier" class="form-label">Métier <span class="text-danger">*</span></label>
-                            <select name="metier" id="metier" class="form-control" data-live-search="true">
-                                @foreach($jobs as $job)
-                                    <option value="{{$job->id}}">{{$job->name}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
-                            <input type="email" name="email" id="email" class="form-control" placeholder="exemple@exemple.com" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="langue" class="form-label">Langue</label>
-                            <select name="langue" id="langue" class="form-control" data-live-search="true">
-                                @foreach($languages as $language)
-                                    <option value="{{$language->id}}">{{$language->name}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Ajouter le CV</button>
-                    </div>
-                </form>
-            </div>
-        </div>
+        @include('components.create_cv')
     </div>
     <script>
        $(document).ready(function() {
@@ -238,10 +199,10 @@
         $(document).ready(function () {
             var table = $('#example').DataTable({
                 dom: '<"top"i>rt<"bottom"p>',
-                paging: true,
+                paging: false,
                 info: false,
                 searching: true,
-                lengthChange: false
+                lengthChange: false,
             });
             $('.btn-filter').on('click', function () {
                 $('.filter-row').toggle();
@@ -273,21 +234,42 @@
             content.classList.toggle('content-closed');
         });
 
-        const dropZone = document.getElementById('drop-zone');
-        const fileInput = document.getElementById('cv');
-        dropZone.addEventListener('click', () => fileInput.click());
-        dropZone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            dropZone.classList.add('dragover');
-        });
-        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
-        dropZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            dropZone.classList.remove('dragover');
-            const files = e.dataTransfer.files;
-            fileInput.files = files;
-            dropZone.textContent = files[0].name;
-        });
+       const dropZone = document.getElementById('drop-zone');
+       const fileInput = document.getElementById('cv');
+
+       // Trigger file input click when drop-zone is clicked
+       dropZone.addEventListener('click', () => fileInput.click());
+
+       // Show drag-over effect
+       dropZone.addEventListener('dragover', (e) => {
+           e.preventDefault();
+           dropZone.classList.add('dragover');
+       });
+
+       // Remove drag-over effect
+       dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+
+       // Handle file drop
+       dropZone.addEventListener('drop', (e) => {
+           e.preventDefault();
+           dropZone.classList.remove('dragover');
+
+           const files = e.dataTransfer.files;
+           fileInput.files = files;  // Assign the dropped files to the file input
+
+           // Update drop-zone text to show the name of the uploaded file
+           if (files.length > 0) {
+               dropZone.innerHTML = `<i class="bi bi-file-earmark-arrow-up"></i><p>${files[0].name}</p>`;
+           }
+       });
+
+       // Update file name when file is selected from file input
+       fileInput.addEventListener('change', () => {
+           const file = fileInput.files[0];
+           if (file) {
+               dropZone.innerHTML = `<i class="bi bi-file-earmark-arrow-up"></i><p>${file.name}</p>`;
+           }
+       });
 
 
     </script>

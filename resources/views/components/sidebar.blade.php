@@ -1,5 +1,5 @@
 @extends('layout.app')
-<nav class="sidebar" id="sidebar">
+<nav class="sidebar " id="sidebar">
     <ul class="nav flex-column">
         <li class="nav-item">
             <a class="nav-link active" href="#"><i class="bi bi-pie-chart"></i> Dashboard</a>

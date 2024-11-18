@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 class CvRepository
 {
     public function get(){
-        $cvs = Cv::with(['user','city','language','job'])->get();
+        $cvs = Cv::with(['user','city','language','job'])->paginate(5);
         return $cvs;
     }
     public function store(array $data) {
@@ -20,6 +20,7 @@ class CvRepository
             'email' => $data['email'],
             'language_id' => $data['langue'],
         ]);
+
     }
 
 }

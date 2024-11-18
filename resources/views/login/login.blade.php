@@ -46,6 +46,8 @@
     .form-group {
         margin-bottom: 20px;
     }
+
+
 </style>
 @extends('layout.app')
 @section('content')
