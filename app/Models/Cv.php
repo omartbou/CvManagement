@@ -18,6 +18,11 @@ class Cv extends Model
         'user_id',
         'language_id',
         'email',
+        'contact_name',
+        'due_date',
+    ];
+    protected $casts = [
+    'due_date' => 'date',
     ];
     public function user()
     {

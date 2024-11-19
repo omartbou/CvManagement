@@ -19,9 +19,28 @@ class CvRepository
             'job_id' => $data['metier'],
             'email' => $data['email'],
             'language_id' => $data['langue'],
+            'contact_name' =>$data['contact_name'],
+            'due_date' =>now()->format('Y-m-d'),
         ]);
 
     }
+    public function destroy($id)
+    {
+        $cv = Cv::find($id);
+
+        if (!$cv) {
+            return redirect()->back()->with('error', 'Cv not found.');
+        }
+
+        try {
+            $cv->delete();
+            return redirect()->back()->with('success', 'Cv deleted successfully.');
+        } catch (\Exception $e) {
+            // Handle any errors
+            return redirect()->back()->with('error', 'An error occurred while deleting the Cv.');
+        }
+    }
+
 
 }
 

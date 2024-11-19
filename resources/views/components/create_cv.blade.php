@@ -21,8 +21,9 @@
                     <div id="cv-error"></div>
                 </div>
                 <div class="mb-3">
-                    <label for="ville" class="form-label">Ville</label>
+                    <label for="ville" class="form-label">Choisir une ville <span class="text-danger">*</span></label>
                     <select name="ville" id="ville" class="form-control" data-live-search="true">
+                        <option disabled selected>Ville</option>
                         @foreach($cities as $city)
                             <option value="{{$city->id}}">{{$city->name}}</option>
                         @endforeach
@@ -30,13 +31,19 @@
                     <div id="ville-error"></div>
                 </div>
                 <div class="mb-3">
-                    <label for="metier" class="form-label">Métier <span class="text-danger">*</span></label>
+                    <label for="metier" class="form-label">Choisir un métier <span class="text-danger">*</span></label>
                     <select name="metier" id="metier" class="form-control" data-live-search="true">
-                        @foreach($jobs as $job)
+                        <option disabled selected>Métier</option>
+                    @foreach($jobs as $job)
                             <option value="{{$job->id}}">{{$job->name}}</option>
                         @endforeach
                     </select>
                     <div id="metier-error"></div>
+                </div>
+                <div class="mb-3">
+                    <label for="contact_name" class="form-label">Le nom du contact <span class="text-danger">*</span></label>
+                    <input type="text" name="contact_name" id="contact_name" class="form-control" placeholder="Le nom du contact">
+                    <div id="contact_name-error"></div>
                 </div>
                 <div class="mb-3">
                     <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
@@ -44,9 +51,10 @@
                     <div id="email-error"></div>
                 </div>
                 <div class="mb-3">
-                    <label for="langue" class="form-label">Langue</label>
+                    <label for="langue" class="form-label">Langue de contact <span class="text-danger">*</span> </label>
                     <select name="langue" id="langue" class="form-control" data-live-search="true">
-                        @foreach($languages as $language)
+                        <option disabled selected>Langue</option>
+                    @foreach($languages as $language)
                             <option value="{{$language->id}}">{{$language->name}}</option>
                         @endforeach
                     </select>
@@ -54,7 +62,7 @@
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button type="submit" class="btn btn-primary">Ajouter le CV</button>
+                <button type="submit" class="btn btn-add_cv text-light">Ajouter le CV</button>
             </div>
         </form>
     </div>

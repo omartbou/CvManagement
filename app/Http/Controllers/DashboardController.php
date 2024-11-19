@@ -23,7 +23,7 @@ class DashboardController extends Controller
         $this->cityRepository = $cityRepository;
         $this->cvService = $cvService;
     }
-
+     //Index page that display the dashboard
     public function index(){
         $languages = $this->languageRepository->get();
         $jobs      = $this->jobRepository->get();
@@ -38,24 +38,32 @@ class DashboardController extends Controller
             'user' => $user,
         ]);
     }
-
+    //function to add cv
     public function addCv(Request $request){
         $validated = $request->validate([
             'ville' => 'required|string',
             'metier' => 'required|string',
+            'contact_name' => 'required|string',
             'email' => 'required|email',
-            'langue' => 'nullable|string',
+            'langue' => 'required|string',
         ]);
         $filePath = $this->cvService->handleFileUpload($request);
         $cvData = array_merge($validated, ['FilePath' => $filePath]);
         if($cvData){
-            $this->cvRepository->store($cvData);
+          $cv =  $this->cvRepository->store($cvData);
 
         }
         return response()->json([
             'success' => true,
             'message' => 'CV uploaded successfully!',
+            'data' => $cv,
         ]);
     }
+    //function to delete the cv
+    public function deleteCv($id)
+    {
+       return $this->cvRepository->destroy($id);
+    }
+
 
 }

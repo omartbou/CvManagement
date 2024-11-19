@@ -2,7 +2,7 @@
 
 <nav class="navbar border-bottom">
     <div class="container-fluid">
-        <div class="navbar-brand bg-body-tertiary">
+        <div class="navbar-brand bg-body-tertiary ms-2">
             <a href="#">
                 <img src="images/logo.png" alt="Groupe MCE Logo" />
             </a>

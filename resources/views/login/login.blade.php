@@ -82,12 +82,15 @@
                         <label for="password" style="color:#232F68;">Password</label>
                         <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password here">
                     </div>
+                    <div class="d-flex justify-content-between">
                     <div class="form-group form-check">
                         <input type="checkbox" class="form-check-input" id="rememberMe">
                         <label class="form-check-label" for="rememberMe">Remember Me</label>
+
                     </div>
                     <a href="#" class="d-block mb-3" style="color:#232F68;">Forgot Password?</a>
-                    <button type="submit" class="btn btn-block text-light" style="background: #232F68;">Sign In</button>
+                    </div>
+                    <button type="submit" class="btn btn-block text-light" style="background: #232F68; width: 100%">Sign In</button>
                 </form>
             </div>
         </div>
